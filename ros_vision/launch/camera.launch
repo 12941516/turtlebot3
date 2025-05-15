@@ -1,0 +1,3 @@
+<launch>
+    <node pkg='ros_vision' type='camera.py' name='camera_node' output='screen' />
+</launch>

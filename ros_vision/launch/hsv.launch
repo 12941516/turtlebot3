@@ -1,0 +1,3 @@
+<launch>
+    <node pkg='ros_vision' type='hsv.py' name='hsv_node' output='screen' />
+</launch>

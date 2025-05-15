@@ -1,0 +1,4 @@
+<launch>
+    <node pkg='sub_pub_practice' type='publisher.py' name='pub_node' output='screen'/>
+</launch>
+

@@ -1,0 +1,3 @@
+<launch>
+    <node pkg='ros_vision' type='gaussianBlur.py' name='gaussianBlur_node' output='screen' />
+</launch>

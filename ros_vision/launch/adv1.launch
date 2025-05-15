@@ -1,0 +1,3 @@
+<launch>
+    <node pkg='ros_vision' type='adv1.py' name='adv1_node' output='screen'/>
+</launch>

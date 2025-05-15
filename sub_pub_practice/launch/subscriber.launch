@@ -1,0 +1,3 @@
+<launch>
+    <node pkg='sub_pub_practice' type='subscriber.py' name='sub_node' output='screen'/>
+</launch>
