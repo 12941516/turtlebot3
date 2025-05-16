@@ -40,3 +40,6 @@
 내용을 입력해주세요  
   
 ## 250516 : Lane curve Expectation code implementation
+**Compute velocity using Curvaturate**  
+1. Calculation of curvaturate
+2. Compute Twist Velocity(linear_x, angular_z)
