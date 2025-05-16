@@ -43,5 +43,6 @@
 **Compute velocity using Curvaturate**  
 1. Calculation of curvaturate
 2. Compute Twist Velocity(linear_x, angular_z)
+  
 ![total2](https://github.com/user-attachments/assets/cdb4ae1a-7b55-46eb-9ad8-9443e24a84ca)
 (View of running code)  
