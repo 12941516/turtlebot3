@@ -7,7 +7,7 @@
 1. Preprocessing Video(Edge detection, Noise elemenation, Perspective transformation, Morphology interpolation)
 2. Lane detecting with Sliding Windows
   
-![result](https://github.com/user-attachments/assets/979179ee-560b-4ef5-9243-6bdd71034ac4)
+![total](https://github.com/user-attachments/assets/29756abc-c632-446a-913b-566bfb14c6b5)
 (View of running code)  
 
 ### 1. Edge detection with sobel_XY_gradients
