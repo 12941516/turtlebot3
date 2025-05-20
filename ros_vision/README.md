@@ -11,32 +11,29 @@
 (View of running code)  
 
 ### 1. Edge detection with sobel_XY_gradients
-![sobel_xy](https://github.com/user-attachments/assets/fc52cd4a-3fbb-4d90-9eca-d09c4e2ce83d)
+![image](https://github.com/user-attachments/assets/611f0631-1bbb-40a8-971c-6306aebb80cf)
 (Sobel gradient on X, Y directions)  
 내용을 입력해주세요  
   
 ### 2. connectedComponentsWithStatsFilter
-![connected](https://github.com/user-attachments/assets/ec6bf9c5-defb-4b02-af71-5afdc23359e3)
+![image](https://github.com/user-attachments/assets/76476c7e-b313-4b2e-bca9-0a4e2f5b6e0b)
 (Noise elemenation with cv2.connectedComponentsWithStats())  
 내용을 입력해주세요  
   
 ### 3. Perspective Transformation
-![persp](https://github.com/user-attachments/assets/f15c223f-958b-4531-8c96-8bbc754647a8)
-(Perspective transformation example)  
-  
-![persp2](https://github.com/user-attachments/assets/741f6abb-fe44-4e08-b3d6-188044a5e249)
+![image](https://github.com/user-attachments/assets/277efefb-1531-4b8f-8da6-d8d91847138b)
 (Perspective transformation function)  
 내용을 입력해주세요  
   
 ### 4. Interpolation with Morphology Dilation
-![morph](https://github.com/user-attachments/assets/b3f9bcd8-d003-4aa4-b295-52d681595203)
-(Morphology example)  
-  
-![morph2](https://github.com/user-attachments/assets/c1805527-a4d8-4481-9eef-ffa5a1b2e91d)
-(Morphology explanation)  
+![image](https://github.com/user-attachments/assets/0e3619f8-c40c-4f3e-8792-a4ad761c9334)
+(Morphology example)   
 내용을 입력해주세요  
   
 ### 5. line centers by sliding window
+![image](https://github.com/user-attachments/assets/f639567f-acee-45f4-834f-8cf74b8a8743)
+![image](https://github.com/user-attachments/assets/64fbe092-69a5-4f85-bd4e-d83b5279b374)
+
 내용을 입력해주세요  
   
 ## 250516 : Lane curve Expectation code implementation
