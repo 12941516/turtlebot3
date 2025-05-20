@@ -13,7 +13,7 @@
 ### 1. Edge detection with sobel_XY_gradients
 ![image](https://github.com/user-attachments/assets/611f0631-1bbb-40a8-971c-6306aebb80cf)
 (Sobel gradient on X, Y directions)  
-'''Python
+```Python
 #=================<Sobel XY gradient Filter>=================#
 def sobel_xy(src):
     src = cv2.cvtColor(src, cv2.COLOR_BGR2GRAY)
@@ -26,7 +26,7 @@ def sobel_xy(src):
     gradient_magnitude = np.zeros_like(gradmag)
     gradient_magnitude[(gradmag >= th_mag[0]) & (gradmag <= th_mag[1])] = 255
     return gradient_magnitude
-'''
+```
 내용을 입력해주세요  
   
 ### 2. connectedComponentsWithStatsFilter
