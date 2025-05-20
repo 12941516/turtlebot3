@@ -27,7 +27,9 @@ def sobel_xy(src):
     gradient_magnitude[(gradmag >= th_mag[0]) & (gradmag <= th_mag[1])] = 255
     return gradient_magnitude
 ```
-내용을 입력해주세요  
+cv2와 Numpy를 사용하여 입력 영상인 src의 HSV 변환 영상에서 Sobel 연산자로 X, Y 축 방향으로의 그래디언트를 계산한다.  
+X, Y 축 방향의 그래디언트를 결합한 뒤, 두 그래디언트를 각각 제곱하여 더하고 루트를 취하면 X, Y 방향의 값 변화를 모두 표현할 수 있다.  
+gradmag = sqrt((sobel_x)^2 + (sobel_y)^2)  
   
 ### 2. connectedComponentsWithStatsFilter
 ![image](https://github.com/user-attachments/assets/76476c7e-b313-4b2e-bca9-0a4e2f5b6e0b)
