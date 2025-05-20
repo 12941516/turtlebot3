@@ -34,7 +34,22 @@ gradmag = sqrt((sobel_x)^2 + (sobel_y)^2)
 ### 2. connectedComponentsWithStatsFilter
 ![image](https://github.com/user-attachments/assets/76476c7e-b313-4b2e-bca9-0a4e2f5b6e0b)
 (Noise elemenation with cv2.connectedComponentsWithStats())  
-내용을 입력해주세요  
+```Python
+#=================<ComponentsWithStatsFilter>================#
+def componentsWithStatsFilter(src):
+    min_area = 50
+    num_labels, labels, stats, _ = cv2.connectedComponentsWithStats(src, connectivity=8)
+    valid_labels = np.where(stats[1:, cv2.CC_STAT_AREA] >= min_area)[0] + 1
+    mask = np.isin(labels, valid_labels)
+    filtered = (mask * 255).astype(np.uint8)
+    return filtered
+```
+이진 영상의 연결 객체에 대하여, min_area보다 작은 영역은 0으로 값을 바꿔 노이즈를 제거한다.  
+cv2.connectedComponentsWithStats() 함수는 인자로 src, connectivity를 받는다.  
+src는 이진 영상이며, connectivity는 4 또는 8의 값으로 연결 방향을 결정한다.  
+cv2.connectedComponentsWithStats() 함수의 반환 값으로 라벨 수, 라벨 번호, 각 객체의 면적 등이 포함된 통계 정보를 사용한다.  
+면적이 min_area보다 크다면 valid_labels 리스트에 저장하며, 여기에는 np.where() 메서드를 사용한다.  
+np.isin(labels, valid_labels)를 통해 valid_labels에 저장된 라벨을 1로 하여 mask를 만들고, mask 행렬에 255를 곱하여 유효 객체만 흰색으로 보정한다.  
   
 ### 3. Perspective Transformation
 ![image](https://github.com/user-attachments/assets/277efefb-1531-4b8f-8da6-d8d91847138b)
