@@ -82,29 +82,55 @@ gaussianBlur, hsv_inrange, morphology, componentsWithStatsFilter를 사용하여
 해당 이진 영상에 대해 cv2의 moment 메서드를 적용하면 차단바의 붉은 색 영역에 대한 색중심점을 여러개 얻을 수 있다.  
 얻어낸 색중심점들의 중심좌표를 사용해 적절한 예외처리와 함께 기울기를 계산하고, 그 값으로 차단바의 여닫힘을 인식한다.  
   
-### 3. Perspective Transformation
-![image](https://github.com/user-attachments/assets/277efefb-1531-4b8f-8da6-d8d91847138b)
-(Perspective transformation function)  
-내용을 입력해주세요  
-  
-### 4. Interpolation with Morphology Dilation
-![image](https://github.com/user-attachments/assets/0e3619f8-c40c-4f3e-8792-a4ad761c9334)
-(Morphology example)   
-내용을 입력해주세요  
-  
-### 5. line centers by sliding window
-![image](https://github.com/user-attachments/assets/f639567f-acee-45f4-834f-8cf74b8a8743)
-![image](https://github.com/user-attachments/assets/64fbe092-69a5-4f85-bd4e-d83b5279b374)
-![image](https://github.com/user-attachments/assets/6cf13694-ce9b-4a9d-8569-a417fbff3d62)
-![image](https://github.com/user-attachments/assets/167a9194-e908-4753-b7ba-6da09a337bb6)
-![image](https://github.com/user-attachments/assets/4a1dc778-8b58-4cae-bf3b-08b8d5a879bc)
-(Sliding Windows Procedures)  
-내용을 입력해주세요  
-  
-## 250516 : Lane curve Expectation code implementation
-**Compute velocity using Curvaturate**  
-1. Calculation of curvaturate
-2. Compute Twist Velocity(linear_x, angular_z)
-  
-![total2](https://github.com/user-attachments/assets/cdb4ae1a-7b55-46eb-9ad8-9443e24a84ca)
-(View of running code)  
+### 3. RL Detection
+![right](https://github.com/user-attachments/assets/ccf1c945-388b-479e-af7f-2fe63d8b293b)
+![left](https://github.com/user-attachments/assets/407ffce9-4e85-4d9f-a2a8-985aa80011da)
+(result of RL Detection code, right and left)  
+```Python
+#=======================<RL detection>=======================#
+def RL_detection(src):
+    src = gaussianBlur(src)
+    src = cv2.cvtColor(src, cv2.COLOR_BGR2GRAY)
+    circles = cv2.HoughCircles(
+        src,
+        cv2.HOUGH_GRADIENT,
+        dp=1,
+        minDist=200,
+        param1=100,
+        param2=60,
+        minRadius=50,
+        maxRadius=200
+    )
+    src = cv2.cvtColor(src, cv2.COLOR_GRAY2BGR)
+    
+    ###TODO : Implements codes in this block###
+    gray = cv2.cvtColor(src, cv2.COLOR_BGR2GRAY)
+    if circles is not None:
+        circles = np.uint16(np.around(circles))
+        for (x,y,r) in circles[0,:]:
+            cv2.circle(src, (x,y), r, (0,255,0), 2)
+            cv2.circle(src, (x,y), 3, (0,0,255), -1)
+            try:
+                left_check = [int(x-r/3),int(y+r/3)]
+                right_check = [int(x+r/3),int(y+r/3)]
+                cv2.circle(src, (left_check[0],left_check[1]), 3, (255,50,50), -1)
+                cv2.circle(src, (right_check[0],right_check[1]), 3, (255,150,150), -1)        
+                if gray[left_check[1],left_check[0]] > gray[right_check[1],right_check[0]]:
+                    return src, -1
+                elif gray[left_check[1],left_check[0]] < gray[right_check[1],right_check[0]]:
+                    return src, 1
+            except: rospy.loginfo("\n***out of frame***\n")
+    ###########################################
+    return src, 0
+```
+#### 주요 함수 및 절차
+1. gaussianBlur : gaussian blurring을 통한 영상의 노이즈 제거
+2. RL_detection : 실제로 구현한 좌/우 표지판 검출 함수
+
+#### 코드 설명  
+(전처리 함수는 ros_vision 패키지를 참고할 것)  
+gaussianBlur로 영상의 노이즈를 제거, cv2.cvtColor() 메서드에 cv2.COLOR_BGR2GRAY 인자를 입력해 단일 채널 영상을 얻는다.  
+해당 단일 채널 영상에 cv2.HoughCircles() 메서드를 사용하여 원의 중심좌표, 반지름을 얻는다.  
+얻은 원 정보를 사용해 중심점 기준 좌 하단, 우 하단 점의 픽셀 값 밝기를 비교해 좌/우 표지판을 판별한다.  
+
+#### 심화 탐구 : cv2.HoughCircles()의 작동 원리
