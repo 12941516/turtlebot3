@@ -2,34 +2,30 @@
 **Environment : Ubuntu 20.04, ROS1 Noetic, NVIDIA Jetson Orin NX 16GB**  
 **Topic       : solve autorace missions with turtlebot3**  
 
-## 250523 : Traffic_light, stop_barrier, RL_detection
-**line detecting procedure**  
-1. Preprocessing Video(Edge detection, Noise elemenation, Perspective transformation, Morphology interpolation)
-2. Lane detecting with Sliding Windows
-  
-![total](https://github.com/user-attachments/assets/29756abc-c632-446a-913b-566bfb14c6b5)
-(View of running code)  
-
-### 1. Edge detection with sobel_XY_gradients
-![image](https://github.com/user-attachments/assets/611f0631-1bbb-40a8-971c-6306aebb80cf)
-(Sobel gradient on X, Y directions)  
+## 250523 : Traffic Light, Stop Barrier, RL Detection
+### 1. Traffic Light
+![trflgt](https://github.com/user-attachments/assets/1a24d28d-5b4b-49bf-b37b-c60d8f9cd8ef)
+(result of Traffic Light code)  
 ```Python
-#=================<Sobel XY gradient Filter>=================#
-def sobel_xy(src):
-    src = cv2.cvtColor(src, cv2.COLOR_BGR2GRAY)
-    sobel_x = cv2.Sobel(src, cv2.CV_64F, 1, 0, ksize=3)
-    sobel_y = cv2.Sobel(src, cv2.CV_64F, 0, 1, ksize=3)
-    gradmag = np.sqrt(sobel_x**2 + sobel_y**2)
-    scale_factor = np.max(gradmag)/255  
-    gradmag = (gradmag/scale_factor).astype(np.uint8)
-    th_mag = (30, 255)  #(30, 255)
-    gradient_magnitude = np.zeros_like(gradmag)
-    gradient_magnitude[(gradmag >= th_mag[0]) & (gradmag <= th_mag[1])] = 255
-    return gradient_magnitude
+#====================<traffic_light_check>===================#
+def traffic_light_check(src):
+    src = gaussianBlur(src)
+    src = hsv_inrange(src)
+    src = morphology(src)
+    src = componentsWithStatsFilter(src)
+    if np.count_nonzero(src) > 4000:
+        rospy.loginfo("RED detected")
+        return src, True
+    return src, False
 ```
-cv2와 Numpy를 사용하여 입력 영상인 src의 HSV 변환 영상에서 Sobel 연산자로 X, Y 축 방향으로의 그래디언트를 계산한다.  
-X, Y 축 방향의 그래디언트를 결합한 뒤, 두 그래디언트를 각각 제곱하여 더하고 루트를 취하면 X, Y 방향의 값 변화를 모두 표현할 수 있다.  
-gradmag = sqrt((sobel_x)^2 + (sobel_y)^2)  
+**주요 함수 및 절차**
+1. gaussianBlur : gaussian blurring을 통한 영상의 노이즈 제거
+2. hsv_inrange : 적색 영역만 남기고 전부 False로 필터링
+3. morphology : 작은 픽셀 노이즈는 morphology의 dilation 메서드로 제거
+4. connectedComponentsWithStatsFilter : 큰 노이즈를 제거하는 필터
+5. traffic_light_check : 실제로 구현한 적색 신호 인식 함수  
+gaussianBlur, hsv_inrange, morphology, componentsWithStatsFilter를 사용하여 붉은 영역에 대한 HSV값만을 True로 하는 이진 영상을 생성한다.  
+해당 이진 영상에서 numpy의 count_nonzero() 메서드를 적용하여 True인 픽셀의 수가 특정 값 이상인 경우에만 적색등을 인식하였다고 판단할 수 있다.  
   
 ### 2. connectedComponentsWithStatsFilter
 ![image](https://github.com/user-attachments/assets/76476c7e-b313-4b2e-bca9-0a4e2f5b6e0b)
