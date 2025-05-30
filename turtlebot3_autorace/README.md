@@ -23,7 +23,8 @@ def traffic_light_check(src):
 2. hsv_inrange : 적색 영역만 남기고 전부 False로 필터링
 3. morphology : 작은 픽셀 노이즈는 morphology의 dilation 메서드로 제거
 4. connectedComponentsWithStatsFilter : 큰 노이즈를 제거하는 필터
-5. traffic_light_check : 실제로 구현한 적색 신호 인식 함수  
+5. traffic_light_check : 실제로 구현한 적색 신호 인식 함수
+
 gaussianBlur, hsv_inrange, morphology, componentsWithStatsFilter를 사용하여 붉은 영역에 대한 HSV값만을 True로 하는 이진 영상을 생성한다.  
 해당 이진 영상에서 numpy의 count_nonzero() 메서드를 적용하여 True인 픽셀의 수가 특정 값 이상인 경우에만 적색등을 인식하였다고 판단할 수 있다.  
   
