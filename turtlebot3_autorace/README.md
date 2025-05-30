@@ -77,6 +77,8 @@ def stop_barrier(src):
 5. stop_barrier : 실제로 구현한 차단바 여닫힘 인식 함수
 
 #### 코드 설명  
+![stop_barrier_idea](https://github.com/user-attachments/assets/8df0d6f6-275b-4f32-9e48-5bc0ccadc231)
+(Stop Barrier의 idea)  
 (전처리 함수는 ros_vision 패키지를 참고할 것)  
 gaussianBlur, hsv_inrange, morphology, componentsWithStatsFilter를 사용하여 붉은 영역에 대한 HSV값만을 True로 하는 이진 영상을 생성한다.  
 해당 이진 영상에 대해 cv2의 moment 메서드를 적용하면 차단바의 붉은 색 영역에 대한 색중심점을 여러개 얻을 수 있다.  
