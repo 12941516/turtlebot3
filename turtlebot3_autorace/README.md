@@ -26,28 +26,61 @@ def traffic_light_check(src):
 5. traffic_light_check : 실제로 구현한 적색 신호 인식 함수
 
 **코드 설명**  
+(전처리 함수는 ros_vision 패키지를 참고할 것)  
 gaussianBlur, hsv_inrange, morphology, componentsWithStatsFilter를 사용하여 붉은 영역에 대한 HSV값만을 True로 하는 이진 영상을 생성한다.  
 해당 이진 영상에서 numpy의 count_nonzero() 메서드를 적용하여 True인 픽셀의 수가 특정 값 이상인 경우에만 적색등을 인식하였다고 판단할 수 있다.  
   
-### 2. connectedComponentsWithStatsFilter
-![image](https://github.com/user-attachments/assets/76476c7e-b313-4b2e-bca9-0a4e2f5b6e0b)
-(Noise elemenation with cv2.connectedComponentsWithStats())  
+### 2. Stop Barrier
+![stbrr](https://github.com/user-attachments/assets/002de3de-96b7-40b6-a354-31fdb45a7688)
+(result of Stop Barrier code)  
 ```Python
-#=================<ComponentsWithStatsFilter>================#
-def componentsWithStatsFilter(src):
-    min_area = 50
-    num_labels, labels, stats, _ = cv2.connectedComponentsWithStats(src, connectivity=8)
-    valid_labels = np.where(stats[1:, cv2.CC_STAT_AREA] >= min_area)[0] + 1
-    mask = np.isin(labels, valid_labels)
-    filtered = (mask * 255).astype(np.uint8)
-    return filtered
+#=======================<stop_barrier>=======================#
+def stop_barrier(src):
+    ###TODO : Implements codes in this block###
+    src = gaussianBlur(src)
+    src = hsv_inrange(src)
+    src = morphology(src)
+    src = componentsWithStatsFilter(src)
+    
+    coordinates = []
+    contours, hierachy = cv2.findContours(src, cv2.RETR_CCOMP, cv2.CHAIN_APPROX_NONE)
+    src = cv2.cvtColor(src, cv2.COLOR_GRAY2BGR)
+    for contour in contours:
+        if cv2.contourArea(contour) < 4000: continue
+        m = cv2.moments(contour)
+        cx = int(m['m10']/m['m00'])
+        cy = int(m['m01']/m['m00'])
+        coordinates.append((cx, cy))
+        cv2.circle(src, (cx, cy), 5, (255, 100, 100), -1)
+    
+    slope = []
+    inf_count = 0
+    if len(coordinates) >= 2:
+        for i in range(len(coordinates) - 1):
+            dx = coordinates[i][0] - coordinates[i+1][0]
+            dy = coordinates[i][1] - coordinates[i+1][1]
+            if dx == 0: inf_count += 1
+            else: slope.append(abs(dy / dx))
+
+        if inf_count > 0: return src, True
+        if slope:
+            slope_avg = sum(slope) / len(slope)
+            if slope_avg > 1: return src, True
+    ###########################################
+    return src, False
 ```
-이진 영상의 연결 객체에 대하여, min_area보다 작은 영역은 0으로 값을 바꿔 노이즈를 제거한다.  
-cv2.connectedComponentsWithStats() 함수는 인자로 src, connectivity를 받는다.  
-src는 이진 영상이며, connectivity는 4 또는 8의 값으로 연결 방향을 결정한다.  
-cv2.connectedComponentsWithStats() 함수의 반환 값으로 라벨 수, 라벨 번호, 각 객체의 면적 등이 포함된 통계 정보를 사용한다.  
-면적이 min_area보다 크다면 valid_labels 리스트에 저장하며, 여기에는 np.where() 메서드를 사용한다.  
-np.isin(labels, valid_labels)를 통해 valid_labels에 저장된 라벨을 1로 하여 mask를 만들고, mask 행렬에 255를 곱하여 유효 객체만 흰색으로 보정한다.  
+**주요 함수 및 절차**
+1. gaussianBlur : gaussian blurring을 통한 영상의 노이즈 제거
+2. hsv_inrange : 적색 영역만 남기고 전부 False로 필터링
+3. morphology : 작은 픽셀 노이즈는 morphology의 dilation 메서드로 제거
+4. connectedComponentsWithStatsFilter : 큰 노이즈를 제거하는 필터
+5. stop_barrier : 실제로 구현한 차단바 여닫힘 인식 함수
+
+**코드 설명**  
+(전처리 함수는 ros_vision 패키지를 참고할 것)  
+gaussianBlur, hsv_inrange, morphology, componentsWithStatsFilter를 사용하여 붉은 영역에 대한 HSV값만을 True로 하는 이진 영상을 생성한다.  
+해당 이진 영상에 대해 cv2의 moment 메서드를 적용하면 차단바의 붉은 색 영역에 대한 색중심점을 여러개 얻을 수 있다.  
+얻어낸 색중심점들의 중심좌표를 사용해 적절한 예외처리와 함께 기울기를 계산하고, 그 값으로 차단바의 여닫힘을 인식한다.  
   
 ### 3. Perspective Transformation
 ![image](https://github.com/user-attachments/assets/277efefb-1531-4b8f-8da6-d8d91847138b)
