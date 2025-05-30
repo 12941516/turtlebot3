@@ -1,0 +1,3 @@
+<launch>
+    <node pkg='turtlebot3_autorace' type='turtlebot3_stop_barrier.py' name='turtlebot3_stop_barrier_node' output='screen'/>
+</launch>

@@ -1,0 +1,3 @@
+<launch>
+    <node pkg='turtlebot3_autorace' type='turtlebot3_RL_detection.py' name='turtlebot3_RL_detection_node' output='screen'/>
+</launch>

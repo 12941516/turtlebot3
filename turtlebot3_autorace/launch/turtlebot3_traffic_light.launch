@@ -1,0 +1,3 @@
+<launch>
+    <node pkg='turtlebot3_autorace' type='turtlebot3_traffic_light.py' name='turtlebot3_traffic_light_node' output='screen'/>
+</launch>

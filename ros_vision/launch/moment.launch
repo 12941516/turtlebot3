@@ -1,0 +1,3 @@
+<launch>
+    <node pkg='ros_vision' type='moment.py' name='moment_node' output='screen' />
+</launch>
